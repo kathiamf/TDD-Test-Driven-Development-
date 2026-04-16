@@ -7,6 +7,10 @@ import {
   countTasks,
   countCompleted,
   countPending,
+  validatePriority,
+  filterByPriority,
+  isDuplicate,
+  createTask,
   resetId,
 } from '../src/taskManager.js';
 
@@ -232,5 +236,58 @@ describe('filterByPriority', () => {
 
   it('deve retornar array vazio para prioridade inexistente', () => {
     expect(filterByPriority(tasks, 'urgente')).toHaveLength(0);
+  });
+});
+
+// Exercício 5: Duplicatas
+
+describe('isDuplicate', () => {
+  let tasks;
+
+  beforeEach(() => {
+    resetId();
+    tasks = [createTask('Estudar')];
+  });
+
+  it('deve retornar true para título igual', () => {
+    expect(isDuplicate(tasks, 'Estudar')).toBe(true);
+  });
+
+  it('deve retornar true para título em caixa diferente', () => {
+    expect(isDuplicate(tasks, 'estudar')).toBe(true);
+  });
+
+  it('deve retornar true para título com espaços extras', () => {
+    expect(isDuplicate(tasks, '  Estudar  ')).toBe(true);
+  });
+
+  it('deve retornar false para título diferente', () => {
+    expect(isDuplicate(tasks, 'Trabalhar')).toBe(false);
+  });
+
+  it('deve retornar false para lista vazia', () => {
+    expect(isDuplicate([], 'Estudar')).toBe(false);
+  });
+});
+
+describe('addTask com duplicata', () => {
+  beforeEach(() => {
+    resetId();
+  });
+
+  it('deve lançar erro ao adicionar título duplicado', () => {
+    let tasks = addTask([], 'Estudar TDD');
+    expect(() => addTask(tasks, 'Estudar TDD')).toThrow('Título duplicado');
+  });
+
+  it('deve lançar erro para duplicata com caixa diferente', () => {
+    let tasks = addTask([], 'Estudar TDD');
+    expect(() => addTask(tasks, 'estudar tdd')).toThrow('Título duplicado');
+  });
+
+  it('deve adicionar normalmente quando título é diferente', () => {
+    let tasks = addTask([], 'Estudar TDD');
+    tasks = addTask(tasks, 'Praticar Vitest');
+    expect(tasks).toHaveLength(2);
   });
 });
