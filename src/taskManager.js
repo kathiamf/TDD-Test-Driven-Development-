@@ -61,3 +61,7 @@ export function isDuplicate(tasks, title) {
   const normalized = title.trim().toLowerCase();
   return tasks.some((t) => t.title.toLowerCase() === normalized);
 }
+
+export function sortTasks(tasks) {
+  return [...tasks].sort((a, b) => Number(a.completed) - Number(b.completed));
+}
