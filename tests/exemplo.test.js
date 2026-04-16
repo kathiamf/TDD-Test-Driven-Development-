@@ -1,8 +1,16 @@
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
-  addTask, removeTask, filterTasks,
-  toggleTask, countTasks, countCompleted,
-  countPending, resetId
+   addTask,
+  removeTask,
+  filterTasks,
+  toggleTask,
+  countTasks,
+  countCompleted,
+  countPending,
+  resetId,
 } from '../src/taskManager.js';
+
+// Exercício 1: removeTask
 
 describe('removeTask', () => {
   let tasks;
@@ -43,6 +51,8 @@ describe('removeTask', () => {
   });
 });
 
+// Exercício 2: filterTasks
+
 describe('filterTasks', () => {
   let tasks;
 
@@ -82,6 +92,8 @@ describe('filterTasks', () => {
     expect(filterTasks(tasks, 'all')).not.toBe(tasks);
   });
 });
+
+//Exercício 3: Contagens
 
 describe('countTasks', () => {
   it('deve retornar 0 para lista vazia', () => {
@@ -134,5 +146,91 @@ describe('countPending', () => {
     let tasks = addTask([], 'Tarefa A');
     tasks = tasks.map((t) => toggleTask(t));
     expect(countPending(tasks)).toBe(0);
+  });
+});
+
+// Exercício 4: Prioridade
+
+describe('validatePriority', () => {
+  it('deve retornar true para "low"', () => {
+    expect(validatePriority('low')).toBe(true);
+  });
+
+  it('deve retornar true para "medium"', () => {
+    expect(validatePriority('medium')).toBe(true);
+  });
+
+  it('deve retornar true para "high"', () => {
+    expect(validatePriority('high')).toBe(true);
+  });
+
+  it('deve retornar false para valor inválido', () => {
+    expect(validatePriority('urgente')).toBe(false);
+  });
+
+  it('deve retornar false para string vazia', () => {
+    expect(validatePriority('')).toBe(false);
+  });
+
+  it('deve retornar false para null', () => {
+    expect(validatePriority(null)).toBe(false);
+  });
+});
+describe('createTask com prioridade', () => {
+  beforeEach(() => {
+    resetId();
+  });
+
+  it('deve criar tarefa com prioridade "high"', () => {
+    const task = createTask('Tarefa urgente', 'high');
+    expect(task).toHaveProperty('priority', 'high');
+  });
+
+  it('deve usar "medium" como prioridade padrão', () => {
+    const task = createTask('Tarefa normal');
+    expect(task).toHaveProperty('priority', 'medium');
+  });
+
+  it('deve criar tarefa com prioridade "low"', () => {
+    const task = createTask('Tarefa baixa', 'low');
+    expect(task).toHaveProperty('priority', 'low');
+  });
+});
+
+describe('filterByPriority', () => {
+  let tasks;
+
+  beforeEach(() => {
+    resetId();
+    tasks = [
+      createTask('Tarefa alta', 'high'),
+      createTask('Tarefa media', 'medium'),
+      createTask('Tarefa baixa', 'low'),
+      createTask('Outra alta', 'high'),
+    ];
+  });
+
+  it('deve retornar apenas tarefas de prioridade "high"', () => {
+    const result = filterByPriority(tasks, 'high');
+    expect(result).toHaveLength(2);
+    result.forEach((t) => expect(t.priority).toBe('high'));
+  });
+
+  it('deve retornar apenas tarefas de prioridade "medium"', () => {
+    const result = filterByPriority(tasks, 'medium');
+    expect(result).toHaveLength(1);
+  });
+
+  it('deve retornar apenas tarefas de prioridade "low"', () => {
+    const result = filterByPriority(tasks, 'low');
+    expect(result).toHaveLength(1);
+  });
+
+  it('deve retornar array vazio para lista vazia', () => {
+    expect(filterByPriority([], 'high')).toHaveLength(0);
+  });
+
+  it('deve retornar array vazio para prioridade inexistente', () => {
+    expect(filterByPriority(tasks, 'urgente')).toHaveLength(0);
   });
 });
