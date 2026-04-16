@@ -9,8 +9,13 @@ export function validateTitle(title) {
   return title.trim().length >= 3;
 }
 
-export function createTask(title) {
-  return { id: _nextId++, title: title.trim(), completed: false };
+export function createTask(title, priority = 'medium') {
+  return {
+    id: _nextId++,
+    title: title.trim(),
+    completed: false,
+    priority,
+  };
 }
 
 export function addTask(tasks, title) {
@@ -41,3 +46,10 @@ export function countTasks(tasks) { return tasks.length; }
 export function countCompleted(tasks) { return tasks.filter((t) => t.completed === true).length; }
 export function countPending(tasks) { return tasks.filter((t) => t.completed === false).length; }
 
+export function validatePriority(priority) {
+  return ['low', 'medium', 'high'].includes(priority);
+}
+
+export function filterByPriority(tasks, priority) {
+  return tasks.filter((t) => t.priority === priority);
+}
