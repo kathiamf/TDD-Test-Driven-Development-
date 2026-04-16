@@ -10,6 +10,7 @@ import {
   validatePriority,
   filterByPriority,
   isDuplicate,
+  sortTasks,
   createTask,
   resetId,
 } from '../src/taskManager.js';
@@ -289,5 +290,49 @@ describe('addTask com duplicata', () => {
     let tasks = addTask([], 'Estudar TDD');
     tasks = addTask(tasks, 'Praticar Vitest');
     expect(tasks).toHaveLength(2);
+  });
+});
+
+// Exercício 6: Ordenação
+
+describe('sortTasks', () => {
+  beforeEach(() => {
+    resetId();
+  });
+
+  it('deve colocar pendentes antes das concluídas', () => {
+    let tasks = addTask([], 'Tarefa 1');
+    tasks = addTask(tasks, 'Tarefa 2');
+    tasks = addTask(tasks, 'Tarefa 3');
+    tasks = tasks.map((t) => (t.id === 1 ? toggleTask(t) : t));
+    const sorted = sortTasks(tasks);
+    expect(sorted[0].completed).toBe(false);
+    expect(sorted[2].completed).toBe(true);
+  });
+
+  it('deve manter a ordem quando todas são pendentes', () => {
+    let tasks = addTask([], 'Tarefa 1');
+    tasks = addTask(tasks, 'Tarefa 2');
+    const sorted = sortTasks(tasks);
+    expect(sorted[0].title).toBe('Tarefa 1');
+    expect(sorted[1].title).toBe('Tarefa 2');
+  });
+
+  it('deve manter a ordem quando todas são concluídas', () => {
+    let tasks = addTask([], 'Tarefa 1');
+    tasks = addTask(tasks, 'Tarefa 2');
+    tasks = tasks.map((t) => toggleTask(t));
+    const sorted = sortTasks(tasks);
+    expect(sorted[0].title).toBe('Tarefa 1');
+  });
+
+  it('deve retornar array vazio para lista vazia', () => {
+    expect(sortTasks([])).toHaveLength(0);
+  });
+
+  it('deve retornar um NOVO array (imutabilidade)', () => {
+    let tasks = addTask([], 'Tarefa 1');
+    const sorted = sortTasks(tasks);
+    expect(sorted).not.toBe(tasks);
   });
 });
