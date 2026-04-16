@@ -23,3 +23,16 @@ export function addTask(tasks, title) {
 export function removeTask(tasks, taskId) {
   return tasks.filter((task) => task.id !== taskId);
 }
+
+export function toggleTask(task) {
+  return { ...task, completed: !task.completed };
+}
+
+export function filterTasks(tasks, status) {
+  switch (status) {
+    case 'completed': return tasks.filter((t) => t.completed === true);
+    case 'pending':   return tasks.filter((t) => t.completed === false);
+    case 'all':
+    default:          return [...tasks];
+  }
+}
