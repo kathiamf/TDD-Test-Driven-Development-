@@ -381,3 +381,47 @@ describe('searchTasks', () => {
     expect(result[0].title).toBe('Praticar Git');
   });
 });
+
+// Exercicio 8:
+
+describe('searchTasks', () => {
+  let tasks;
+
+  beforeEach(() => {
+    resetId();
+    tasks = [
+      createTask('Estudar TDD'),
+      createTask('Testar funções'),
+      createTask('Praticar Git'),
+      createTask('Revisar código'),
+    ];
+  });
+
+  it('deve encontrar tarefas que contenham a query', () => {
+    const result = searchTasks(tasks, 'est');
+    expect(result).toHaveLength(2);
+  });
+
+  it('deve funcionar com busca case-insensitive', () => {
+    const result = searchTasks(tasks, 'EST');
+    expect(result).toHaveLength(2);
+  });
+
+  it('deve retornar array vazio quando nada for encontrado', () => {
+    expect(searchTasks(tasks, 'xyz')).toHaveLength(0);
+  });
+
+  it('deve retornar array vazio para lista vazia', () => {
+    expect(searchTasks([], 'algo')).toHaveLength(0);
+  });
+
+  it('deve retornar todas as tarefas para query vazia', () => {
+    expect(searchTasks(tasks, '')).toHaveLength(4);
+  });
+
+  it('deve encontrar por parte do título', () => {
+    const result = searchTasks(tasks, 'Git');
+    expect(result).toHaveLength(1);
+    expect(result[0].title).toBe('Praticar Git');
+  });
+});
