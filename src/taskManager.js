@@ -65,3 +65,8 @@ export function isDuplicate(tasks, title) {
 export function sortTasks(tasks) {
   return [...tasks].sort((a, b) => Number(a.completed) - Number(b.completed));
 }
+
+export function searchTasks(tasks, query) {
+  const q = query.toLowerCase();
+  return tasks.filter((t) => t.title.toLowerCase().includes(q));
+}
