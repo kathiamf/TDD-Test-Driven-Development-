@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import {
   addTask, removeTask, filterTasks,
-  toggleTask, resetId
+  toggleTask, countTasks, countCompleted,
+  countPending, resetId
 } from '../src/taskManager.js';
 
 describe('removeTask', () => {
@@ -80,5 +80,59 @@ describe('filterTasks', () => {
 
   it('deve retornar um NOVO array (imutabilidade)', () => {
     expect(filterTasks(tasks, 'all')).not.toBe(tasks);
+  });
+});
+
+describe('countTasks', () => {
+  it('deve retornar 0 para lista vazia', () => {
+    expect(countTasks([])).toBe(0);
+  });
+
+  it('deve retornar o total de tarefas', () => {
+    resetId();
+    let tasks = addTask([], 'Tarefa 1');
+    tasks = addTask(tasks, 'Tarefa 2');
+    expect(countTasks(tasks)).toBe(2);
+  });
+});
+
+describe('countCompleted', () => {
+  beforeEach(() => { resetId(); });
+
+  it('deve retornar 0 para lista vazia', () => {
+    expect(countCompleted([])).toBe(0);
+  });
+
+  it('deve contar as tarefas concluídas', () => {
+    let tasks = addTask([], 'Tarefa 1');
+    tasks = addTask(tasks, 'Tarefa 2');
+    tasks = tasks.map((t) => (t.id === 1 ? toggleTask(t) : t));
+    expect(countCompleted(tasks)).toBe(1);
+  });
+
+  it('deve retornar 0 quando nenhuma está concluída', () => {
+    let tasks = addTask([], 'Tarefa A');
+    expect(countCompleted(tasks)).toBe(0);
+  });
+});
+
+describe('countPending', () => {
+  beforeEach(() => { resetId(); });
+
+  it('deve retornar 0 para lista vazia', () => {
+    expect(countPending([])).toBe(0);
+  });
+
+  it('deve contar as tarefas pendentes', () => {
+    let tasks = addTask([], 'Tarefa 1');
+    tasks = addTask(tasks, 'Tarefa 2');
+    tasks = tasks.map((t) => (t.id === 1 ? toggleTask(t) : t));
+    expect(countPending(tasks)).toBe(1);
+  });
+
+  it('deve retornar 0 quando todas estão concluídas', () => {
+    let tasks = addTask([], 'Tarefa A');
+    tasks = tasks.map((t) => toggleTask(t));
+    expect(countPending(tasks)).toBe(0);
   });
 });
