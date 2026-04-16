@@ -1,0 +1,25 @@
+{
+  "name": "tdd-test-driven-development-",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kathiamf/TDD-Test-Driven-Development-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kathiamf/TDD-Test-Driven-Development-/issues"
+  },
+  "homepage": "https://github.com/kathiamf/TDD-Test-Driven-Development-#readme",
+  "devDependencies": {
+    "@vitest/ui": "^4.1.4",
+    "vitest": "^4.1.4"
+  }
+}
